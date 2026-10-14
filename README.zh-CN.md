@@ -18,6 +18,10 @@ Comment Anchors 提供了丰富的配置选项，可根据个人工作流进行�
 
 请查看[更新日志](CHANGELOG.md)。
 
+## 源码阅读教程
+
+想了解扩展的启动流程、锚点解析与缓存、侧边栏视图及各项核心功能的代码位置，请阅读[Comment Anchors 源码阅读教程](CODE_READING_GUIDE.zh-CN.md)。
+
 # 功能概览
 
 - 可在任何语言的文件中添加锚点
