@@ -36,9 +36,11 @@ class TagCompletionProvider implements CompletionItemProvider {
 
         const linePrefix = document.lineAt(position.line).text.slice(0, position.character);
         const isAuto = context.triggerKind === CompletionTriggerKind.TriggerCharacter;
+        const commentPrefix = prefixes.some((prefix: string) => linePrefix.endsWith(prefix));
+        const leadingSpace = commentPrefix ? " " : "";
 
         // only match exact prefixes
-        if (isAuto && !prefixes.some((prefix: string) => linePrefix.endsWith(prefix))) {
+        if (isAuto && !commentPrefix) {
             return undefined;
         }
 
@@ -46,7 +48,7 @@ class TagCompletionProvider implements CompletionItemProvider {
             const name = `${tag.tag} Anchor`;
             const item = new CompletionItem(name, CompletionItemKind.Event);
 
-            item.insertText = tag.tag + separator;
+            item.insertText = leadingSpace + tag.tag + separator;
             item.detail = `Insert ${tag.tag} anchor`;
 
             ret.items.push(item);
@@ -54,7 +56,7 @@ class TagCompletionProvider implements CompletionItemProvider {
             if (tag.behavior == "region") {
                 const endItem = new CompletionItem(endTag + name, CompletionItemKind.Event);
 
-                endItem.insertText = endTag + tag.tag;
+                endItem.insertText = leadingSpace + endTag + tag.tag;
                 endItem.detail = `Insert ${endTag + tag.tag} comment anchor`;
                 item.keepWhitespace = true;
 

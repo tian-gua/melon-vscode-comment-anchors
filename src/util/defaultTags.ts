@@ -73,4 +73,12 @@ export function registerDefaults(tagMap: Map<string, TagEntry>): void {
         scope: "workspace",
         behavior: "link",
     });
+
+    register({
+        tag: "LINKS",
+        iconColor: "#2ecc71",
+        highlightColor: "#2ecc71",
+        scope: "hidden",
+        behavior: "links",
+    });
 }

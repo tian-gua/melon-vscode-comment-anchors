@@ -768,6 +768,12 @@ export class AnchorEngine {
         // parse all 'key1=value1,key2=value2'
         for (const pair of raw.split(",")) {
             const [key, value] = pair.trim().split("=");
+
+            if (value === undefined) {
+                mapping.set("id", key);
+                continue;
+            }
+
             AnchorEngine.output(`Trying to set key=${key},value=${value}`);
             mapping.set(key, value);
         }
@@ -910,7 +916,7 @@ export class AnchorEngine {
                 // Construct the resulting string to display
                 if (comment.length === 0) {
                     display = tagEntry.tag;
-                } else if (displayInSidebar && tagEntry.behavior != "link") {
+                } else if (displayInSidebar && tagEntry.behavior != "link" && tagEntry.behavior != "links") {
                     display = displayTagName ? (tagEntry.tag + ": " + comment) : comment;
                 } else {
                     display = comment;
@@ -1233,12 +1239,12 @@ export interface TagEntry {
     scope?: string;
     isSequential?: boolean;
     isEpic?: boolean;
-    behavior: "anchor" | "region" | "link";
+    behavior: "anchor" | "region" | "link" | "links";
 }
 
 /**
  * Defined for tag attribute
- * Currenly only "seq" and "epic" are used
+ * Supported attributes include "seq", "epic", and "id".
  */
 export interface TagAttributes {
     seq: number;

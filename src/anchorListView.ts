@@ -55,8 +55,8 @@ export function createViewContent(engine: AnchorEngine, webview: Webview): strin
 
         if (tag.behavior == "region") {
             tagFlags.push("Region Tag");
-        } else if (tag.behavior == "link") {
-            tagFlags.push("Link Tag");
+        } else if (tag.behavior == "link" || tag.behavior == "links") {
+            tagFlags.push(tag.behavior == "links" ? "Links Tag" : "Link Tag");
         }
 
         const flags = tagFlags.join(", ");

@@ -1,11 +1,11 @@
-import { CancellationToken, DocumentLink, DocumentLinkProvider, ProviderResult, TextDocument, Uri, window, workspace } from "vscode";
+import { CancellationToken, DocumentLink, DocumentLinkProvider, ProviderResult, Range, TextDocument, Uri, window, workspace } from "vscode";
 import { join, resolve } from "node:path";
 
 import { AnchorEngine } from "../anchorEngine";
 import { flattenAnchors } from "./flattener";
 import { existsSync, lstatSync } from "node:fs";
 
-const LINK_REGEX = /^(\.{1,2}[/\\])?([^#:]+)?(:\d+|#[\w-]+)?$/;
+const LINK_REGEX = /^(\.{1,2}[/\\])?([^#:]+)?(:\d+|#[^\s#:]+)?$/;
 
 export class LinkProvider implements DocumentLinkProvider {
 	
@@ -41,11 +41,45 @@ export class LinkProvider implements DocumentLinkProvider {
                 const tagId = anchor.anchorTag;
                 const tag = this.engine.tags.get(tagId);
 
-                return tag?.behavior == "link";
+                return tag?.behavior == "link" || tag?.behavior == "links";
             });
 
         for (const anchor of flattenedLinks) {
-            const components = LINK_REGEX.exec(anchor.anchorText)!;
+            const tag = this.engine.tags.get(anchor.anchorTag);
+
+            if (tag?.behavior == "links") {
+                const line = document.lineAt(anchor.lineNumber - 1);
+                const commentStart = line.text.indexOf(anchor.anchorText, anchor.startIndex);
+
+                if (commentStart < 0) {
+                    continue;
+                }
+
+                const lineOffset = document.offsetAt(line.range.start);
+                let partStart = 0;
+                for (const part of anchor.anchorText.split(/[|｜]/)) {
+                    const targetId = part.trim();
+                    const target = flattened.find((candidate) => candidate.attributes.id == targetId);
+
+                    if (targetId && target) {
+                        const tokenOffset = part.indexOf(targetId);
+                        const start = document.positionAt(lineOffset + commentStart + partStart + tokenOffset);
+                        const end = document.positionAt(lineOffset + commentStart + partStart + tokenOffset + targetId.length);
+                        const docLink = new DocumentLink(new Range(start, end), this.createTarget(document.uri, target.lineNumber));
+                        docLink.tooltip = "Click here to go to anchor " + targetId;
+                        list.push(docLink);
+                    }
+
+                    partStart += part.length + 1;
+                }
+
+                continue;
+            }
+
+            const components = LINK_REGEX.exec(anchor.anchorText);
+            if (!components) {
+                continue;
+            }
             const parameter = components[3] || '';
             const filePath = components[2] || document?.uri?.fsPath || '';
             const relativeFolder = components[1];

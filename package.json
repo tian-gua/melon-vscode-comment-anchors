@@ -299,9 +299,9 @@
 				"commentAnchors.tags.separators": {
 					"type": "array",
 					"default": [
+						" ",
 						" - ",
-						": ",
-						" "
+						": "
 					],
 					"items": {
 						"type": "string"
@@ -426,7 +426,8 @@
 								"enum": [
 									"anchor",
 									"region",
-									"link"
+									"link",
+									"links"
 								],
 								"description": "Specify the behavior type of this tag",
 								"default": "anchor"
@@ -475,6 +476,12 @@
 							"highlightColor": "#2ecc71",
 							"scope": "workspace",
 							"behavior": "link"
+						},
+						"LINKS": {
+							"iconColor": "#2ecc71",
+							"highlightColor": "#2ecc71",
+							"scope": "hidden",
+							"behavior": "links"
 						}
 					}
 				}
@@ -511,5 +518,6 @@
 		"csv-stringify": "^6.4.5",
 		"debounce": "^2.0.0",
 		"minimatch": "^9.0.3"
-	}
+	},
+	"packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
