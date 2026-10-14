@@ -59,7 +59,7 @@ export class LinkProvider implements DocumentLinkProvider {
                 let partStart = 0;
                 for (const part of anchor.anchorText.split(/[|｜]/)) {
                     const targetId = part.trim();
-                    const target = flattened.find((candidate) => candidate.attributes.id == targetId);
+                    const target = flattened.find((candidate) => AnchorEngine.hasAnchorId(candidate.attributes, targetId));
 
                     if (targetId && target) {
                         const tokenOffset = part.indexOf(targetId);
@@ -110,7 +110,7 @@ export class LinkProvider implements DocumentLinkProvider {
                         let targetLine = 0;
 
                         for (const otherAnchor of flattened) {
-                            if (otherAnchor.attributes.id == targetId) {
+                            if (AnchorEngine.hasAnchorId(otherAnchor.attributes, targetId)) {
                                 targetLine = otherAnchor.lineNumber;
                                 break;
                             }

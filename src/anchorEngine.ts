@@ -726,6 +726,10 @@ export class AnchorEngine {
         this.removeMap(document.uri);
     }
 
+    public static hasAnchorId(attributes: TagAttributes, id: string): boolean {
+        return attributes.id?.split(/[|｜]/).some((candidate) => candidate.trim() == id) ?? false;
+    }
+
     /**
      * Travel to the specified anchor id
      *
@@ -738,7 +742,7 @@ export class AnchorEngine {
         const flattened = flattenAnchors(anchors);
 
         for (const anchor of flattened) {
-            if (anchor.attributes.id == id) {
+            if (AnchorEngine.hasAnchorId(anchor.attributes, id)) {
                 const targetLine = anchor.lineNumber - 1;
 
                 commands.executeCommand("revealLine", {

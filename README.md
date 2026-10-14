@@ -124,10 +124,10 @@ Example: `// LINK some/file.txt:50`
 ### Linking to a specific anchor
 
 Link anchors can take you to another anchor in the target file by appending the path with `#` followed by the anchor id.
-The anchor id can be specified with the `id` attribute, or directly as a bare attribute value.
+The anchor id can be specified with the `id` attribute, or directly as a bare attribute value. Separate multiple IDs with `|` to make the same anchor available under several aliases.
 
 Example: `// LINK some/file.txt#my-anchor` \\
-Takes you here: `// ANCHOR[my-anchor] This is the destination!` (equivalent to `// ANCHOR[id=my-anchor]`)
+Takes you here: `// ANCHOR[my-anchor|alias] This is the destination!` (equivalent to `// ANCHOR[id=my-anchor|alias]`)
 
 You can even omit the path entirely and link directly to an anchor or line within the current file
 
