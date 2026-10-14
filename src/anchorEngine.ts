@@ -919,7 +919,7 @@ export class AnchorEngine {
 
                 // Construct the resulting string to display
                 if (comment.length === 0) {
-                    display = tagEntry.tag;
+                    display = tagEntry.behavior == "anchor" && attributes.id ? attributes.id : tagEntry.tag;
                 } else if (displayInSidebar && tagEntry.behavior != "link" && tagEntry.behavior != "links") {
                     display = displayTagName ? (tagEntry.tag + ": " + comment) : comment;
                 } else {

@@ -35,6 +35,7 @@ export default class EntryAnchor extends EntryBase {
     ) {
         super(engine, showLine ? `[${lineNumber}] ${anchorText}` : anchorText);
 
+        this.description = attributes.id && attributes.id !== anchorText ? `id: ${attributes.id}` : undefined;
         this.tooltip = `${anchorText} (Click to reveal)`;
         this.command = {
             title: "",
