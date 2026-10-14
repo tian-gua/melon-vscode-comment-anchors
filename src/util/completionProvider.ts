@@ -44,12 +44,26 @@ class TagCompletionProvider implements CompletionItemProvider {
             return undefined;
         }
 
-        for (const tag of this.engine.tags.values()) {
+        const priorityTags = ["ANCHOR", "LINKS", "LINK"];
+        const tags = [...this.engine.tags.values()].sort((a, b) => {
+            const aPriority = priorityTags.indexOf(a.tag);
+            const bPriority = priorityTags.indexOf(b.tag);
+
+            if (aPriority < 0 && bPriority < 0) {
+                return 0;
+            }
+
+            return (aPriority < 0 ? priorityTags.length : aPriority) -
+                (bPriority < 0 ? priorityTags.length : bPriority);
+        });
+
+        for (const tag of tags) {
             const name = `${tag.tag} Anchor`;
             const item = new CompletionItem(name, CompletionItemKind.Event);
 
             item.insertText = leadingSpace + tag.tag + separator;
             item.detail = `Insert ${tag.tag} anchor`;
+            item.sortText = String(ret.items.length).padStart(6, "0");
 
             ret.items.push(item);
 
@@ -58,6 +72,7 @@ class TagCompletionProvider implements CompletionItemProvider {
 
                 endItem.insertText = leadingSpace + endTag + tag.tag;
                 endItem.detail = `Insert ${endTag + tag.tag} comment anchor`;
+                endItem.sortText = String(ret.items.length).padStart(6, "0");
                 item.keepWhitespace = true;
 
                 ret.items.push(endItem);
