@@ -49,7 +49,8 @@ export class LinkProvider implements DocumentLinkProvider {
 
             if (tag?.behavior == "links") {
                 const line = document.lineAt(anchor.lineNumber - 1);
-                const commentStart = line.text.indexOf(anchor.anchorText, anchor.startIndex);
+                const anchorColumn = document.positionAt(anchor.startIndex).character;
+                const commentStart = line.text.indexOf(anchor.anchorText, anchorColumn);
 
                 if (commentStart < 0) {
                     continue;
