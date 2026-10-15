@@ -77,13 +77,22 @@ export class LinkProvider implements DocumentLinkProvider {
                 continue;
             }
 
-            const components = LINK_REGEX.exec(anchor.anchorText);
-            if (!components) {
+            // Also accept `#id -- path`, a readable alternative to `path#id`.
+            const idThenPath = /^#([^\s#]+)\s+--\s+(.+?)\s*$/.exec(anchor.anchorText);
+            const components = idThenPath ? undefined : LINK_REGEX.exec(anchor.anchorText);
+            if (!idThenPath && !components) {
                 continue;
             }
-            const parameter = components[3] || '';
-            const filePath = components[2] || document?.uri?.fsPath || '';
-            const relativeFolder = components[1];
+            const parameter = idThenPath ? `#${idThenPath[1]}` : components?.[3] || '';
+            let filePath = idThenPath ? idThenPath[2] : components?.[2] || document?.uri?.fsPath || '';
+            let relativeFolder = components?.[1];
+            if (idThenPath) {
+                const relativePrefix = /^(\.{1,2}[/\\])/.exec(filePath);
+                relativeFolder = relativePrefix?.[1];
+                if (relativeFolder) {
+                    filePath = filePath.slice(relativeFolder.length);
+                }
+            }
             const fullPath = relativeFolder ? resolve(basePath, relativeFolder, filePath) : resolve(workspacePath, filePath);
             const fileUri = Uri.file(fullPath);
 

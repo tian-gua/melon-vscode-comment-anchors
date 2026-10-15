@@ -124,6 +124,8 @@ Comment Anchors 支持丰富的标签自定义选项，包括修改默认标签�
 示例：`// LINK some/file.txt#my-anchor`  
 目标位置：`// ANCHOR[my-anchor|alias] 这是跳转目标！`（等同于 `// ANCHOR[id=my-anchor|alias]`）
 
+也支持先写锚点 ID、再用 `--` 指定文件路径：`// LINK #my-anchor -- some/file.txt`。该形式适用于路径中包含空格的情况。
+
 也可以省略路径，直接链接到当前文件中的锚点或行。
 
 示例：`// LINK #error-handling`

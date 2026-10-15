@@ -129,6 +129,8 @@ The anchor id can be specified with the `id` attribute, or directly as a bare at
 Example: `// LINK some/file.txt#my-anchor` \\
 Takes you here: `// ANCHOR[my-anchor|alias] This is the destination!` (equivalent to `// ANCHOR[id=my-anchor|alias]`)
 
+You can also put the anchor ID first and separate the file path with `--`: `// LINK #my-anchor -- some/file.txt`. This form also supports paths containing spaces.
+
 You can even omit the path entirely and link directly to an anchor or line within the current file
 
 Example: `// LINK #error-handling`
